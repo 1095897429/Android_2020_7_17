@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+//第三
+apply from: 'tinkerpatch.gradle'
 
 android {
     compileSdkVersion 29
@@ -9,11 +11,42 @@ android {
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
-
+        //MultiDex分包方法
+        multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+
+    //① 配置签名
+    signingConfigs {
+        debug {
+            keyAlias 'bajie'
+            keyPassword '123456'
+            storeFile file('/Users/zhouliang/Downloads/博客/gitPro/Android_2020_7_17/bajie.jks')
+            storePassword '123456'
+        }
+
+        release {
+            keyAlias 'bajie'
+            keyPassword '123456'
+            storeFile file('/Users/zhouliang/Downloads/博客/gitPro/Android_2020_7_17/bajie.jks')
+            storePassword '123456'
+            v2SigningEnabled false//关闭签名方案 APK Signature Scheme v2
+        }
+    }
+
     buildTypes {
+        debug{
+            buildConfigField("boolean","LOG_DEBUG","true")
+            signingConfig signingConfigs.debug
+            minifyEnabled false
+            shrinkResources false
+            zipAlignEnabled false // Zipalign优化
+            crunchPngs false //关闭crunchPng优化, 以加快构建
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -29,4 +62,9 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
+
+    //第二 tinker的核心库
+    implementation("com.tinkerpatch.sdk:tinkerpatch-android-sdk:1.2.14.7"){ changing = true }
+    //分包
+    implementation 'androidx.multidex:multidex:2.0.1'
 }

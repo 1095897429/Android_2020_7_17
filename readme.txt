@@ -5,4 +5,7 @@
     本地项目 add commit后，关联远程仓库后，拉取时发现 显示 fatal: refusing to merge unrelated histories
     原因：两个仓库 是属于 两个独立的仓库
     解决：命令就是 $git pull origin master --allow-unrelated-histories
-         在sourceTree中操作：
+         在sourceTree中操作：用变基代替合并 打钩 即可
+
+3.学习下插件化
+    1.微信的Tinker
