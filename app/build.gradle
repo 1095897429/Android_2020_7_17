@@ -52,6 +52,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+
+    dexOptions{
+        //支持大型项目
+        jumboMode = true
+    }
 }
 
 dependencies {
