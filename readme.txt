@@ -16,7 +16,6 @@
         方便性：autoDispose > rxLifecycler > 手动切断disposable
 
 5.command + N 可以快速的在数据类中打开创建操作 -- ✅
-6.android studio 4.0版本没有gsonformat 插件了
 
 
 
