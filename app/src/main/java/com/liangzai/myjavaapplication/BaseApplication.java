@@ -1,8 +1,10 @@
 package com.liangzai.myjavaapplication;
 
 import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 
+import com.liangzai.common_lib.CommonApplication;
 import com.tencent.tinker.entry.ApplicationLike;
 import com.tinkerpatch.sdk.TinkerPatch;
 import com.tinkerpatch.sdk.loader.TinkerPatchApplicationLike;
@@ -14,6 +16,20 @@ import com.tinkerpatch.sdk.loader.TinkerPatchApplicationLike;
  * 描述:
  */
 public class BaseApplication extends Application {
+
+    private static BaseApplication myApp;
+
+    public static BaseApplication getApplication() {
+        return myApp;
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        myApp = this;
+    }
+
+
 
     private ApplicationLike tinkerApplicationLike;
 

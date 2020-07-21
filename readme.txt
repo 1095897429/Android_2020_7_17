@@ -9,3 +9,35 @@
 
 3.学习下插件化
     1.微信的Tinker
+
+4.网络部分
+    1.封装retrofit请求框架
+    2.rxJava + retrofit 防止内存泄露
+        方便性：autoDispose > rxLifecycler > 手动切断disposable
+
+5.command + N 可以快速的在数据类中打开创建操作 -- ✅
+6.android studio 4.0版本没有gsonformat 插件了
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
