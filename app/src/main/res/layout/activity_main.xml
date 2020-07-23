@@ -1,25 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context=".activity.MainActivity">
 
-    <TextView
+    <me.grantland.widget.AutofitTextView
+        android:id="@+id/title"
+        android:justificationMode="none"
+        android:maxLines="1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:text="Hello World!Hello World!Hello World!Hello World!Hello Worl  d!Hello World!"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <com.github.aakira.compoundicontextview.CompoundIconTextView
+        android:id="@+id/compoundIconTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawablePadding="4dp"
+        android:gravity="center"
+        android:text="Hello World!"
+        android:textColor="#3F51B5"
+        android:textSize="16sp"
+        app:cit_drawableLeft="@mipmap/icon_feather"
+        app:cit_iconColor="#000"
+        app:cit_iconHeight="16dp"
+        app:cit_iconWidth="16dp" />
 
     <Button
         android:id="@+id/test_timeout"
         android:text="测试倒计时"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"></Button>
+
+
 
 </LinearLayout>

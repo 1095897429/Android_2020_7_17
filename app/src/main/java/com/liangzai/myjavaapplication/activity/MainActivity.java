@@ -1,4 +1,4 @@
-package com.liangzai.myjavaapplication;
+package com.liangzai.myjavaapplication.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,36 +8,43 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Layout;
 import android.text.TextUtils;
 import android.widget.Button;
+import android.widget.TextView;
 
+import com.facebook.fbui.textlayoutbuilder.TextLayoutBuilder;
 import com.liangzai.common_lib.StringUtils;
+import com.liangzai.myjavaapplication.R;
 import com.liangzai.myjavaapplication.bean.HomeBean;
 import com.liangzai.myjavaapplication.net.base.BaseObserver;
 import com.liangzai.myjavaapplication.net.base.BaseWithoutCodeObserver;
 import com.liangzai.myjavaapplication.net.helper.RetrofitHelper;
 import com.liangzai.myjavaapplication.net.response.HttpResponse;
+import com.liangzai.myjavaapplication.utils.UIHelper;
 import com.liangzai.myjavaapplication.utils.Utils;
 import com.socks.library.KLog;
 import com.uber.autodispose.AutoDispose;
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider;
+import com.vstechlab.easyfonts.EasyFonts;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
 
+
+
     private Button test_timeout;
+
+    private TextView title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        title = findViewById(R.id.title);
+        title.setTypeface(EasyFonts.robotoMedium(this));
 
         getData();
 
@@ -48,8 +55,8 @@ public class MainActivity extends AppCompatActivity {
     private void initEvent() {
         test_timeout = findViewById(R.id.test_timeout);
         test_timeout.setOnClickListener(view -> {
-            initTimeOut();
-
+//            initTimeOut();
+            UIHelper.toVideoListActivity(this);
         });
     }
 
