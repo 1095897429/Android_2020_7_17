@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.badoo.mobile.util.WeakHandler;
 import com.facebook.fbui.textlayoutbuilder.TextLayoutBuilder;
+import com.gyf.immersionbar.ImmersionBar;
 import com.liangzai.common_lib.StringUtils;
 import com.liangzai.myjavaapplication.R;
 import com.liangzai.myjavaapplication.bean.HomeBean;
@@ -59,10 +60,21 @@ public class MainActivity extends AppCompatActivity {
     private TextView suffix_text;
     private TextView suffix_text_2;
 
+    private ImmersionBar mImmersionBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        mImmersionBar = ImmersionBar.with(this);//初始化
+        mImmersionBar
+                .statusBarDarkFont(true, 0.2f)//设置状态栏图片为深色，(如果android 6.0以下就是半透明)
+                .fitsSystemWindows(true)//设置这个是为了防止布局和顶部的状态栏重叠
+                .statusBarColor(R.color.white)//这里的颜色，你可以自定义。
+                .init();
+
+
         title = findViewById(R.id.title);
         title.setTypeface(EasyFonts.robotoMedium(this));
 
@@ -129,6 +141,7 @@ public class MainActivity extends AppCompatActivity {
             mHandler.removeCallbacksAndMessages(null);
             mHandler = null;
         }
+
     }
 
     private void initTimeOut() {
@@ -179,6 +192,8 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
+
+
 
 
 }

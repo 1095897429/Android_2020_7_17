@@ -13,6 +13,36 @@
             quitSafely 清空延迟消息，发送非延迟消息 
             quit 清空所有消息队列中的消息
         e.ThreadLocal / 同步消息、同步屏障    
-        
+            某些数据以线程为作用域，不同线程具有不同数据副本，采用它
+            防止内存溢出，我们可以在使用完threadLocal后，调用remove操作 (担心线程会一直运行，然后value的值一直没有办法释放) 
+            每个线程都有一个threadlocalmap,存储的key是threadlocal,value是传入的值，
         
 2. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

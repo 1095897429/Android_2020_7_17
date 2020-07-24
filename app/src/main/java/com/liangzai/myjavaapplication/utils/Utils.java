@@ -110,8 +110,8 @@ public class Utils {
             //居中对齐imageSpan
             CustomImageSpan imageSpan = new CustomImageSpan(context,res_img,2);
             SpannableString spanString2 = new SpannableString(result);
-            spanString2.setSpan(imageSpan, 0, 4, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            spanString2.setSpan(clickableSpan,0,4,Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spanString2.setSpan(imageSpan, result.length() - suffix.length(), result.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spanString2.setSpan(clickableSpan,result.length() - suffix.length(),result.length(),Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             tv.append(spanString2);
             tv.setMovementMethod(LinkMovementMethod.getInstance());
             tv.setText(spanString2);

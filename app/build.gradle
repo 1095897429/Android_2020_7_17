@@ -119,4 +119,9 @@ dependencies {
     //阴影
     implementation 'com.github.lihangleo2:ShadowLayout:2.1.8'
 
+    // 基础依赖包，必须要依赖
+    implementation 'com.gyf.immersionbar:immersionbar:3.0.0'
+    // fragment快速实现（可选）
+    implementation 'com.gyf.immersionbar:immersionbar-components:3.0.0'
+
 }
