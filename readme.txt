@@ -15,8 +15,9 @@
     2.rxJava + retrofit 防止内存泄露
         方便性：autoDispose > rxLifecycler > 手动切断disposable
 
-5.command + N 可以快速的在数据类中打开创建操作 -- ✅
-
+7.23功能
+1.弱handler添加
+2.
 
 
 

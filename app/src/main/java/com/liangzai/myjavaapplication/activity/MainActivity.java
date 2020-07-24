@@ -5,14 +5,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Lifecycle;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Layout;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.view.KeyEvent;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.badoo.mobile.util.WeakHandler;
 import com.facebook.fbui.textlayoutbuilder.TextLayoutBuilder;
 import com.liangzai.common_lib.StringUtils;
 import com.liangzai.myjavaapplication.R;
@@ -23,6 +32,7 @@ import com.liangzai.myjavaapplication.net.helper.RetrofitHelper;
 import com.liangzai.myjavaapplication.net.response.HttpResponse;
 import com.liangzai.myjavaapplication.utils.UIHelper;
 import com.liangzai.myjavaapplication.utils.Utils;
+import com.liangzai.myjavaapplication.widget.CustomImageSpan;
 import com.socks.library.KLog;
 import com.uber.autodispose.AutoDispose;
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider;
@@ -33,11 +43,21 @@ import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
 
+    @SuppressLint("HandlerLeak")
+    private Handler mWeakHandler = new Handler(){
 
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+        }
+    };
 
     private Button test_timeout;
 
     private TextView title;
+    private TextView tag_text;
+    private TextView suffix_text;
+    private TextView suffix_text_2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +65,26 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         title = findViewById(R.id.title);
         title.setTypeface(EasyFonts.robotoMedium(this));
+
+        tag_text = findViewById(R.id.tag_text);
+        Utils.setTitleTag("直播回放","如果通过反射来创建新的实例，可以调用Class提供的newInstance()方法：",
+                "12",tag_text
+                ,getResources().getColor(R.color.yellow),
+                getResources().getColor(R.color.text_first_color));
+
+        suffix_text = findViewById(R.id.suffix_text);
+
+        String richText = "点击“确认支付”则代表您已经知悉并同意";
+        String suffixText = "《鸟哥笔记用户协议》";
+        Utils.setRichText(getApplicationContext(),richText,suffixText,suffix_text, Color.parseColor("#FFBA20"));
+
+        suffix_text_2 = findViewById(R.id.suffix_text_2);
+
+        //拼接链接
+        String link = "https://www.baidu.com";
+        if(!TextUtils.isEmpty(link)){
+            Utils.setRichImg(getApplicationContext(),"我是link测试的哈，小番薯","icon",suffix_text_2, R.mipmap.icon_flash_link);
+        }
 
         getData();
 
@@ -84,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        KLog.e("tag","界面销毁");
         if(mHandler != null){
             mHandler.removeCallbacksAndMessages(null);
             mHandler = null;
@@ -124,4 +165,20 @@ public class MainActivity extends AppCompatActivity {
                 });
 
     }
+
+
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        KLog.e("tag","code " + keyCode);
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+
+            UIHelper.toVideoListActivity(this);
+            finish();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+
 }

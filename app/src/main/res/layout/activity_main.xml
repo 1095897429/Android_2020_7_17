@@ -33,6 +33,70 @@
         app:cit_iconHeight="16dp"
         app:cit_iconWidth="16dp" />
 
+
+    <TextView
+        android:text="啦啦啦啦"
+        android:id="@+id/tag_text"
+        android:textSize="13sp"
+        android:justificationMode="none"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"></TextView>
+
+
+    <TextView
+        android:text="啦啦啦啦"
+        android:id="@+id/suffix_text"
+        android:textSize="11sp"
+        android:justificationMode="none"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"></TextView>
+
+
+    <TextView
+        android:text="11111"
+        android:id="@+id/suffix_text_2"
+        android:textSize="13sp"
+        android:justificationMode="none"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"></TextView>
+
+
+    <!-- 加上边界 -->
+    <com.lihang.ShadowLayout
+        android:id="@+id/part4444"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginBottom="5dp"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:hl_isShowShadow="true"
+        app:hl_cornerRadius="10dp"
+        app:hl_shadowColor="#bebebe"
+        app:hl_leftShow="true"
+        app:hl_bottomShow="true"
+        app:hl_rightShow="true"
+        app:hl_topShow="true"
+        app:hl_shadowBackColor="#fff"
+        app:hl_shadowLimit="3dp">
+
+
+    <TextView
+        android:background="@drawable/bg_corners_10_white"
+        android:text="我有阴影边框"
+        android:id="@+id/shadow_text"
+        android:textSize="13sp"
+        android:paddingTop="10dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="10dp"
+        android:justificationMode="none"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"></TextView>
+
+    </com.lihang.ShadowLayout>
+
+
     <Button
         android:id="@+id/test_timeout"
         android:text="测试倒计时"

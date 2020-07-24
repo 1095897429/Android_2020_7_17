@@ -114,4 +114,9 @@ dependencies {
     implementation 'com.vstechlab.easyfonts:easyfonts:1.0.0'
     //带图片的textview
     compile 'com.github.aakira:compound-icon-textview:1.2.1@aar'
+    //弱引用handler
+    compile 'com.badoo.mobile:android-weak-handler:1.1'
+    //阴影
+    implementation 'com.github.lihangleo2:ShadowLayout:2.1.8'
+
 }
