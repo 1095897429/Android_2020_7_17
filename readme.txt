@@ -20,6 +20,9 @@
 2.通过hide/show的方式 切换的时候走onHiddenChanged()生命周期
 3.状态栏适配
 
+8.4 滑动
+
+
 
 
 
