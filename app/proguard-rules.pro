@@ -28,3 +28,10 @@
 
 # 网络请求相关
 -keep public class android.net.http.SslError
+
+#保留@JavascriptInterface注解,为webview4.2上调用js
+-keepattributes *JavascriptInterface*
+#保留JavascriptInterface中的方法
+-keepclassmembers class * {
+    @android.webkit.JavascriptInterface <methods>;
+}

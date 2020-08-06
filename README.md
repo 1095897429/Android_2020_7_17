@@ -32,8 +32,25 @@
         4.https://blog.csdn.net/javazejian/article/details/52426425(intentservice)
                    
         
-2.混淆的理解(2020.8.4)
-    通用模板 + 依赖的库 + 项目中的类
+2.OkHttp的理解(2020.8.5)
+    1.创建一个Chain,然后进入proceed函数，然后获取到下一个拦截器，调用拦截器的intercept函数,得的Chain,再次调用proceed函数，直到最后一次
+    new RealInterceptorChain
+    chain.proceed(request) ---> new RealInterceptorChain
+                                获取interceptor
+ （RetryAndFollowUpInterceptor) interceptor.intercept(chain) --->  chain.proceed(request) ---> new RealInterceptorChain
+                                return response                                                获取interceptor
+    return response(①)                                                                       （BridgeInterceptor) interceptor.intercept(chain)  ---> ... 
+                                                                                               return response   
+    2.拦截器对chain进行拦截，主要是对request 和 response 做一些操作  
+    3.重连机制 RetryAndFollowUpInterceptor
+      设置网络需要的header BridgeInterceptor
+      get方法才能被缓存 CachedInterceptor【利用DiskLruCache将响应结果存入本地】
+      RealConnction建立socket和tls连接 ConnectionInterceptor
+   
+    参考文档：
+         https://www.jianshu.com/p/3f181c43b42b  
+         https://blog.csdn.net/wanniu/article/details/80742404 (拦截器 CachedInterceptor)
+       
     
 
 
