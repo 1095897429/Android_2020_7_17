@@ -44,14 +44,33 @@
     2.拦截器对chain进行拦截，主要是对request 和 response 做一些操作  
     3.重连机制 RetryAndFollowUpInterceptor
       设置网络需要的header BridgeInterceptor
-      get方法才能被缓存 CachedInterceptor【利用DiskLruCache将响应结果存入本地】
+      get请求才能被缓存 CachedInterceptor【利用DiskLruCache将响应结果存入本地】
       RealConnction建立socket和tls连接 ConnectionInterceptor
-   
+      向服务器发送请求并返回Response对象  CallServerInterceptor
+    4.并发执行数 和 当前域名请求数 判断将call放入到runningAsyncCalls或者 readyAsyncCalls 
+      疑问：当前域名请求数如何判断的 ❎
+      
+        
     参考文档：
          https://www.jianshu.com/p/3f181c43b42b  
          https://blog.csdn.net/wanniu/article/details/80742404 (拦截器 CachedInterceptor)
-       
-    
+         https://www.jianshu.com/p/93dae81077a1 (调度器 Dispatcher)
+ 
+ 3.Retrofit的理解(2020.8.6)
+    1.内部网络请求是okhttp完成，它仅仅负责网络请求接口的封装
+    2.类的职责
+     CallAdapter.Factory是接口，有3个实现类
+        DefaultCallAdapterFactory ExecutorCallAdaterFatory RxJava2CallAdapterFatory
+        Android平台默认的是DefaultCallAdapterFactory，这个在PlatForm中预先定义了
+     Call.Factory 是接口
+        OkHttpClient
+     Retrofit.Call是接口
+        OkHttpCall   
+     Converter.Factory是接口
+        BuiltInConvertersFactory OptionalConverterFatory... 
+     Call是retrofit2接口   
+        ExecutorCallbackCall
+     3.在Retrofit的build函数中，构建了整体所需的一些对象，比如url，callAdapter等  
 
 
 
