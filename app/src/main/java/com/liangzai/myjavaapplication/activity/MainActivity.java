@@ -39,8 +39,17 @@ import com.uber.autodispose.AutoDispose;
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider;
 import com.vstechlab.easyfonts.EasyFonts;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -157,6 +166,21 @@ public class MainActivity extends AppCompatActivity {
 
     //http://baobab.kaiyanapp.com/api/v2/categories?udid=26868b32e808498db32fd51fb422d00175e179df&vc=83
     private void getData() {
+        //返回的类型是call
+        Call call  = RetrofitHelper.getApiService().getHomeDataCall();
+        call.enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, Response response) {
+
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+
+            }
+        });
+
+        //返回的类型是observable
         RetrofitHelper.getApiService().getHomeData()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -177,6 +201,49 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
+
+        //① 测试
+        Observable<String> observable;
+        //可以简单的看成是Observable.create(new 接口对象);
+        observable = Observable.create(new ObservableOnSubscribe<String>() {
+            @Override
+            public void subscribe(ObservableEmitter<String> e) throws Exception {
+                System.out.println("服务员从厨师那取得 扁食");
+                e.onNext("扁食");
+                System.out.println("服务员从厨师那取得 拌面");
+                e.onNext("拌面");
+                System.out.println("服务员从厨师那取得 蒸饺");
+                e.onNext("蒸饺");
+                System.out.println("厨师告知服务员菜上好了");
+                e.onComplete();
+            }
+        });
+
+        Observer<String> observer = new Observer<String>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                System.out.println("来个沙县套餐！！！");
+            }
+
+            @Override
+            public void onNext(String s) {
+                System.out.println("服务员端给顾客  " + s);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+            }
+
+            @Override
+            public void onComplete() {
+                System.out.println("服务员告诉顾客菜上好了");
+            }
+        };
+
+        observable.subscribeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
     }
 
 

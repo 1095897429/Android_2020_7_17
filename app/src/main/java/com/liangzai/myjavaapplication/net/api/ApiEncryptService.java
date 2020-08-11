@@ -5,6 +5,7 @@ import com.liangzai.myjavaapplication.net.base.BaseObserver;
 import com.liangzai.myjavaapplication.net.response.HttpResponse;
 
 import io.reactivex.Observable;
+import retrofit2.Call;
 import retrofit2.http.GET;
 
 /**
@@ -19,4 +20,9 @@ public interface ApiEncryptService{
     //获取首页第一页数据
     @GET("v2/feed?num=2&udid=26868b32e808498db32fd51fb422d00175e179df&vc=83")
     Observable<HomeBean> getHomeData();
+
+    //获取首页第一页数据
+    @GET("v2/feed?num=2&udid=26868b32e808498db32fd51fb422d00175e179df&vc=83")
+    Call<HomeBean> getHomeDataCall();
+
 }

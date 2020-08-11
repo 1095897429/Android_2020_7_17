@@ -25,6 +25,7 @@
             1.线程池 + Handler ，执行方法execute默认线程池，executeOnExecutor指定线程池
             2.cancel只是给定一个标志，还需要通过isCancled手动去结束任务
             3.默认的执行是串行，想并行的话，那么不使用原本提供的队列，直接使用线程池即可
+    
     4.参考文档
         1.https://blog.csdn.net/iispring/article/details/47180325（handler）
         2.https://blog.csdn.net/yanbober/article/details/45936145(handler)   
@@ -49,36 +50,82 @@
       向服务器发送请求并返回Response对象  CallServerInterceptor
     4.并发执行数 和 当前域名请求数 判断将call放入到runningAsyncCalls或者 readyAsyncCalls 
       疑问：当前域名请求数如何判断的 ❎
-      
-        
+    5.一般正常使用
+      String url = "https://www.baidu.com"
+      OkHttpClient client = new OkHttpClient();
+      Request request = new Request.Builder()
+                        .url(url)
+                        .get()
+                        .build();
+      Call call  = client.newCall(request);
+      call.enqueue(new CallBack(){});
+   
     参考文档：
          https://www.jianshu.com/p/3f181c43b42b  
          https://blog.csdn.net/wanniu/article/details/80742404 (拦截器 CachedInterceptor)
          https://www.jianshu.com/p/93dae81077a1 (调度器 Dispatcher)
  
- 3.Retrofit的理解(2020.8.6)
+ 3.Retrofit的理解(2020.8.10)
     1.内部网络请求是okhttp完成，它仅仅负责网络请求接口的封装
     2.类的职责
-     CallAdapter.Factory是接口，有3个实现类
+     CallAdapter.Factory是接口 ：将响应类型 转化为 另一个类型
         DefaultCallAdapterFactory ExecutorCallAdaterFatory RxJava2CallAdapterFatory
         Android平台默认的是DefaultCallAdapterFactory，这个在PlatForm中预先定义了
-     Call.Factory 是接口
-        OkHttpClient
-     Retrofit.Call是接口
+     Call.Factory 是接口 ： 发送网络请求
+        OkHttpClient()
+     Retrofit2.Call是接口：默认返回的数据类型
         OkHttpCall   
-     Converter.Factory是接口
+     Converter.Factory是接口 : 添加对象转换器
         BuiltInConvertersFactory OptionalConverterFatory... 
-     Call是retrofit2接口   
-        ExecutorCallbackCall
-     3.在Retrofit的build函数中，构建了整体所需的一些对象，比如url，callAdapter等  
-
-
-
-
-
-
-
-
+     3.一般正常使用
+        xxxService service = retrofit.create(xxxService.class);
+        Call call = service.函数();
+        call.enqueue(new CallBack(){});
+     4.大体逻辑
+          1.构建配置
+          CallAdapted中的callAdapter.adapt(call) 默认调用了 DefaultCallAdapterFactory中的CallAdapter.adpt(call),创建ExecutorCallBackCall(executor,call),此call是在HttpServiceMethod类中invoke时创建的okHttpCall对象,call的类型是retrofit2.Call
+          2.0 call 发送请求
+          okHttpCall.enqueue请求中通过createRawCall函数获取到RealCall对象，类型是okhttp3.Call,retrofit模块将以前我们自动手写的call.enqueue函数帮助我们写了，【利用RealCall的enqueue函数调用】RealCall中的AsyncCall调用execute函数获取到response对象
+          2.1 rx 发送请求
+          将call请求转化为CallEnqueueObservable对象，在订阅时调用subscribeActual函数去调用call.enqueue(callback)函数
+          3.异步处理 
+          给定Callback,然后okHttp3获取到response后，在接口回调callback处理异步情况，最后在MainThreadExecutor去执行任务，通过handler在主线中去处理回调
+          4.解析结果
+          在OkHttpCall中的onResponse函数拿到后台未加工response对象数据，紧接着调用parseResponse(rawResponse)进行解析
+     5.总结
+        配置了一些url,解析器等等设置，然后在调用的时候利用okhttpCall对象，内部还是利用okhttpClient的RealCall对象去发起网络请求,okhttp的拦截器模式得以运用，最后拿到数据利用默认的executor处理
+        如果设置了RxJava的话，那么在okhttpCall中的回调就到了CallEnqueueObservable中，然后观察者回调接口执行onNext(response)
+   
+     参考文档：
+        https://segmentfault.com/a/1190000016835505（源码解析）
+ 
+ 4.RxJava2的理解(2020.8.10)
+   1.一般正常使用
+        RetrofitHelper.getApiService().getHomeData()
+            .subscribeOn(Schedulers.newThread())
+            .observeOn(AndroidSchedulers.mainThread())
+            .as(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(this, Lifecycle.Event.ON_DESTROY)))
+            .subscribe();
+   2.subscribe()
+    创建服务员，发送数据给服务员，服务员再将数据发送给观察者。在subscribe时将observer和emitter进行绑定关联
+   3.subscribeOn(Schedulers.newThread()) 异步切换
+     subscribeOn() 每次会返回一个 Observable
+     创建NewThreadScheduler，调用父类的scheduleDirect()函数；创建NewThreadWork同时创建线程池，执行任务，这个任务就是new SubscirbeTask(parent)，parent是新创建的顾客！！！(parent持有上个顾客的引用)
+     这样在新创建的Observable类中开启线程去执行【创建服务员 并且 传递数据的效果】
+   4.多次调用subscribeOn()会出现什么情况？
+     subscribeOn() 每次会返回一个 Observable
+     可以理解为在线程1中创建线程2，在线程2中去执行【创建服务员 并且 传递数据的效果】，线程的话是【当前线程有效】-- 只有最先    指定的有效
+   5.observeOn(AndroidSchedulers.mainThread()) 异步切换
+     observeOn() 每次会返回一个 Observable
+     这里将observer重新封装了一下，此时新的observer是一个顾客 同时 也是个 Runnable 。在onNext方法中设置中通过Handler机制在运行Runnable任务，将数据传递给最原始的顾客
+   6.多次调用observeOn()会出现什么情况？
+     observeOn() 每次会返回一个 Observable
+     指定承诺对【当前线程有效】 --- 只有最后指定的有效
+     
+    疑问：新创建的顾客中的队列如何读取数据的？ 
+     
+   总结：不断的创建顾客，最后由服务员将数据通过不同的顾客一层层传递到最原始的小明顾客
+        一般的observer顾客都是按步传递，而observerOn中的将observer重新封装了一下，在onNext方法中设置了异步操作逻辑
 
 
 
