@@ -50,10 +50,6 @@ public class RoundBackgroundColorSpan extends ReplacementSpan {
         paint.setTextAlign(Paint.Align.CENTER);
 
         Paint.FontMetrics fontMetrics = paint.getFontMetrics();
-        //distance = Center线到baseline的距离
-        //A = C = (bottom - top)/2;
-        //bottom = baseline + FontMetrics.bottom;
-        //top = baseline+FontMetrics.top;
         float distance = (fontMetrics.bottom - fontMetrics.top)/2 - fontMetrics.bottom;
         //1 计算baseline 位置
         //2 也可以用center + distance 计算出baseline位置

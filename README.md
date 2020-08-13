@@ -85,7 +85,7 @@
           1.构建配置
           CallAdapted中的callAdapter.adapt(call) 默认调用了 DefaultCallAdapterFactory中的CallAdapter.adpt(call),创建ExecutorCallBackCall(executor,call),此call是在HttpServiceMethod类中invoke时创建的okHttpCall对象,call的类型是retrofit2.Call
           2.0 call 发送请求
-          okHttpCall.enqueue请求中通过createRawCall函数获取到RealCall对象，类型是okhttp3.Call,retrofit模块将以前我们自动手写的call.enqueue函数帮助我们写了，【利用RealCall的enqueue函数调用】RealCall中的AsyncCall调用execute函数获取到response对象
+          okHttpCall.enqueue请求中通过createRawCall函数通过callFactory(okHttpClient)的newCall获取到RealCall对象，类型是okhttp3.Call,retrofit模块将以前我们自动手写的call.enqueue函数帮助我们写了，【利用RealCall的enqueue函数调用】RealCall中的AsyncCall调用execute函数获取到response对象
           2.1 rx 发送请求
           将call请求转化为CallEnqueueObservable对象，在订阅时调用subscribeActual函数去调用call.enqueue(callback)函数
           3.异步处理 
@@ -107,28 +107,39 @@
             .as(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(this, Lifecycle.Event.ON_DESTROY)))
             .subscribe();
    2.subscribe()
-    创建服务员，发送数据给服务员，服务员再将数据发送给观察者。在subscribe时将observer和emitter进行绑定关联
+     订阅开始时创建服务员，发送数据给服务员，服务员再将数据发送给观察者。在subscribe时将observer和emitter进行绑定关联
    3.subscribeOn(Schedulers.newThread()) 异步切换
      subscribeOn() 每次会返回一个 Observable
      创建NewThreadScheduler，调用父类的scheduleDirect()函数；创建NewThreadWork同时创建线程池，执行任务，这个任务就是new SubscirbeTask(parent)，parent是新创建的顾客！！！(parent持有上个顾客的引用)
-     这样在新创建的Observable类中开启线程去执行【创建服务员 并且 传递数据的效果】
+     这样在新创建的Observable类中开启线程去执行【创建服务员 并且 传递数据的这个动作】
    4.多次调用subscribeOn()会出现什么情况？
      subscribeOn() 每次会返回一个 Observable
-     可以理解为在线程1中创建线程2，在线程2中去执行【创建服务员 并且 传递数据的效果】，线程的话是【当前线程有效】-- 只有最先    指定的有效
+     可以理解为在线程1中创建线程2，在线程2中去执行【创建服务员 并且 传递数据的这个动作】，线程的话是【当前线程有效】-- 只有最先指定的有效
    5.observeOn(AndroidSchedulers.mainThread()) 异步切换
      observeOn() 每次会返回一个 Observable
-     这里将observer重新封装了一下，此时新的observer是一个顾客 同时 也是个 Runnable 。在onNext方法中设置中通过Handler机制在运行Runnable任务，将数据传递给最原始的顾客
+     这里重新将observer封装了一下，此时新的observer是一个顾客 同时 也是个 Runnable 。在onNext方法中设置中通过Handler机制在运行Runnable任务，将数据传递给最原始的顾客
    6.多次调用observeOn()会出现什么情况？
      observeOn() 每次会返回一个 Observable
      指定承诺对【当前线程有效】 --- 只有最后指定的有效
+   7.一些正常的操作符
+     map :  就是重新将observer封装，在onNext方法中调用mapper.apply将其转化为另一个对象类型
      
-    疑问：新创建的顾客中的队列如何读取数据的？ 
+  
+   疑问：新创建的顾客中的队列如何读取数据的？ 
+        在回调的时候创建了队列queue,然后在onNext中通过offer添加进去，之后再从队列中取出来
      
    总结：不断的创建顾客，最后由服务员将数据通过不同的顾客一层层传递到最原始的小明顾客
         一般的observer顾客都是按步传递，而observerOn中的将observer重新封装了一下，在onNext方法中设置了异步操作逻辑
+    
+    参考：
+     https://www.jianshu.com/p/88aa273d37be (队列queue)     
+     https://mp.weixin.qq.com/s/XWzBblkYsCa512a-6jyd6A (rxJava3)
 
-
-
+ 5.泛型的理解(2020.8.11)
+    1.
+    
+ 6.文件操作以及图片加载(2020.8.12)  
+     
 
 
 

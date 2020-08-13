@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.badoo.mobile.util.WeakHandler;
 import com.facebook.fbui.textlayoutbuilder.TextLayoutBuilder;
+import com.google.gson.Gson;
 import com.gyf.immersionbar.ImmersionBar;
 import com.liangzai.common_lib.StringUtils;
 import com.liangzai.myjavaapplication.R;
@@ -42,10 +43,12 @@ import com.vstechlab.easyfonts.EasyFonts;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -244,6 +247,36 @@ public class MainActivity extends AppCompatActivity {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
+
+
+        Observable.just("Hello")
+                .map(new Function<String, Object>() {
+                    @Override
+                    public Object apply(String s) throws Exception {
+                        return null;
+                    }
+                })
+                .subscribe();
+
+        Observable.just("Hello")
+                .flatMap(new Function<String, ObservableSource<?>>() {
+                    @Override
+                    public ObservableSource<?> apply(String s) throws Exception {
+                        return null;
+                    }
+                })
+                .subscribe();
+
+
+        Gson gson = new Gson();
+        String json="{\"age\":30,\"name\":\"明\",\"len\":170]}";
+        //反序列化
+        HomeBean jsTestMode = gson.fromJson(json,HomeBean.class);
+        //序列化
+        String json1 = gson.toJson(jsTestMode);
+
+
+
     }
 
 
