@@ -24,6 +24,8 @@ import android.widget.TextView;
 import com.badoo.mobile.util.WeakHandler;
 import com.facebook.fbui.textlayoutbuilder.TextLayoutBuilder;
 import com.google.gson.Gson;
+import com.google.gson.internal.$Gson$Types;
+import com.google.gson.reflect.TypeToken;
 import com.gyf.immersionbar.ImmersionBar;
 import com.liangzai.common_lib.StringUtils;
 import com.liangzai.myjavaapplication.R;
@@ -39,6 +41,16 @@ import com.socks.library.KLog;
 import com.uber.autodispose.AutoDispose;
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider;
 import com.vstechlab.easyfonts.EasyFonts;
+
+import java.lang.reflect.GenericArrayType;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.lang.reflect.WildcardType;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -206,76 +218,166 @@ public class MainActivity extends AppCompatActivity {
 
 
         //① 测试
-        Observable<String> observable;
-        //可以简单的看成是Observable.create(new 接口对象);
-        observable = Observable.create(new ObservableOnSubscribe<String>() {
-            @Override
-            public void subscribe(ObservableEmitter<String> e) throws Exception {
-                System.out.println("服务员从厨师那取得 扁食");
-                e.onNext("扁食");
-                System.out.println("服务员从厨师那取得 拌面");
-                e.onNext("拌面");
-                System.out.println("服务员从厨师那取得 蒸饺");
-                e.onNext("蒸饺");
-                System.out.println("厨师告知服务员菜上好了");
-                e.onComplete();
-            }
-        });
-
-        Observer<String> observer = new Observer<String>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-                System.out.println("来个沙县套餐！！！");
-            }
-
-            @Override
-            public void onNext(String s) {
-                System.out.println("服务员端给顾客  " + s);
-            }
-
-            @Override
-            public void onError(Throwable e) {
-            }
-
-            @Override
-            public void onComplete() {
-                System.out.println("服务员告诉顾客菜上好了");
-            }
-        };
-
-        observable.subscribeOn(Schedulers.newThread())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(observer);
-
-
-        Observable.just("Hello")
-                .map(new Function<String, Object>() {
-                    @Override
-                    public Object apply(String s) throws Exception {
-                        return null;
-                    }
-                })
-                .subscribe();
-
-        Observable.just("Hello")
-                .flatMap(new Function<String, ObservableSource<?>>() {
-                    @Override
-                    public ObservableSource<?> apply(String s) throws Exception {
-                        return null;
-                    }
-                })
-                .subscribe();
+//        Observable<String> observable;
+//        //可以简单的看成是Observable.create(new 接口对象);
+//        observable = Observable.create(new ObservableOnSubscribe<String>() {
+//            @Override
+//            public void subscribe(ObservableEmitter<String> e) throws Exception {
+//                System.out.println("服务员从厨师那取得 扁食");
+//                e.onNext("扁食");
+//                System.out.println("服务员从厨师那取得 拌面");
+//                e.onNext("拌面");
+//                System.out.println("服务员从厨师那取得 蒸饺");
+//                e.onNext("蒸饺");
+//                System.out.println("厨师告知服务员菜上好了");
+//                e.onComplete();
+//            }
+//        });
+//
+//        Observer<String> observer = new Observer<String>() {
+//            @Override
+//            public void onSubscribe(Disposable d) {
+//                System.out.println("来个沙县套餐！！！");
+//            }
+//
+//            @Override
+//            public void onNext(String s) {
+//                System.out.println("服务员端给顾客  " + s);
+//            }
+//
+//            @Override
+//            public void onError(Throwable e) {
+//            }
+//
+//            @Override
+//            public void onComplete() {
+//                System.out.println("服务员告诉顾客菜上好了");
+//            }
+//        };
+//
+//        observable.subscribeOn(Schedulers.newThread())
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(observer);
+//
+//
+//        Observable.just("Hello")
+//                .map(new Function<String, Object>() {
+//                    @Override
+//                    public Object apply(String s) throws Exception {
+//                        return null;
+//                    }
+//                })
+//                .subscribe();
+//
+//        Observable.just("Hello")
+//                .flatMap(new Function<String, ObservableSource<?>>() {
+//                    @Override
+//                    public ObservableSource<?> apply(String s) throws Exception {
+//                        return null;
+//                    }
+//                })
+//                .subscribe();
 
 
         Gson gson = new Gson();
-        String json="{\"age\":30,\"name\":\"明\",\"len\":170]}";
-        //反序列化
-        HomeBean jsTestMode = gson.fromJson(json,HomeBean.class);
-        //序列化
-        String json1 = gson.toJson(jsTestMode);
+//      String json="{\"age\":30,\"name\":\"明\",\"len\":170}";
+        String json="hello";
+        String jsTestMode = gson.fromJson(json,String.class);
 
 
+        //MainActivity
+        KLog.e("tag","main getClass " + getClass());
+        //T 是 ArrayList<String>
+        TypeToken ty1 =  new TypeToken<ArrayList<String>>(){};
+        //MainActivity$5
+        KLog.e("tag","ty1 getClass " + ty1.getClass());
+        Type superclass = ty1.getClass().getSuperclass();
+        KLog.e("tag","ty1 superclass " + superclass);
+        Type genericsuperclass = ty1.getClass().getGenericSuperclass();
+        KLog.e("tag","ty1 genericsuperclass " + genericsuperclass);
+
+        ParameterizedType parameterized = (ParameterizedType) genericsuperclass;
+        KLog.e("tag","ty1 parameterized0 " + parameterized.getActualTypeArguments()[0]);
+        Type typeType = parameterized.getActualTypeArguments()[0];
+        if (typeType instanceof Class) {
+            KLog.e("tag","1111");
+        } else if (typeType instanceof ParameterizedType) {
+            KLog.e("tag","2222");
+        }
+        KLog.e("tag","ty1 parameterized1 " + $Gson$Types.canonicalize(parameterized.getActualTypeArguments()[0]));
+
+
+        GenericArrayTypeTest genericArrayTypeTest = new GenericArrayTypeTest();
+
+        Method[] declaredMethods = GenericArrayTypeTest.class.getDeclaredMethods();
+        for (Method method : declaredMethods) {
+            // main方法不用处理
+            if (method.getName().startsWith("main")) {
+                continue;
+            }
+
+            // 该方法能获取到该方法所有的实际的参数化类型，比如本例中有五个参数，那数组长度就是5
+            Type[] types = method.getGenericParameterTypes();
+            // 分组打印出来
+            for (Type type : types) {
+
+                if (type instanceof Class<?>) {
+                    // type is a normal class.
+                    KLog.e("tag","11111 type :" + type);
+                }
+
+//                KLog.e("tag","types :" + type);
+                if (type instanceof ParameterizedType) {
+                    ParameterizedType parameterizedType = (ParameterizedType) type;
+                    KLog.e("tag","ParameterizedType type :" + parameterizedType);
+                    Type rawType = parameterizedType.getRawType();
+                    KLog.e("tag","ParameterizedType 原始type :" + rawType);
+                }
+                else if (type instanceof GenericArrayType) {
+                    // 从结果
+
+                    GenericArrayType genericArrayType = (GenericArrayType) type;
+                    KLog.e("tag","GenericArrayType type :" + genericArrayType);
+
+                    Type genericComponentType = genericArrayType.getGenericComponentType();
+                    KLog.e("tag","genericComponentType:" + genericComponentType);
+                }
+                else if (type instanceof WildcardType) {
+                    WildcardType wildcardType = (WildcardType) type;
+                    System.out.println("WildcardType type :" + wildcardType);
+                }
+                else if (type instanceof TypeVariable) {
+                    TypeVariable typeVariable = (TypeVariable) type;
+                    System.out.println("TypeVariable type :" + typeVariable);
+                }
+                else {
+                    Class clazz = (Class) type;
+                    KLog.e("tag","type :" + clazz);
+                }
+            }
+        }
+    }
+
+
+    public static class Bean<T>{
+        private T mBean;
+    }
+
+
+    public static class GenericArrayTypeTest<T> {
+
+        // 这里面有各种各样的数组：各有不同 方便看测试效果
+        // 含有泛型数组的才是GenericArrayType
+
+        public void testGenericArrayType( List<String>[] pTypeArray,List<String> list,T test1, Set<String> set1, Class<?> clz,
+                                          String str,Bean bean) {
+        }
+
+//        private void testGenericArrayType(List<String>[] pTypeArray, T[] vTypeArray, List<String> list,
+//                         List<? extends Number> wildcardList, String[] strings,
+//                         GenericArrayTypeTest[] test){
+//        }
 
     }
 

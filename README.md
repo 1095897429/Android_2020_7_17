@@ -136,9 +136,46 @@
      https://mp.weixin.qq.com/s/XWzBblkYsCa512a-6jyd6A (rxJava3)
 
  5.泛型的理解(2020.8.11)
-    1.
+    Type
+    Class 是 Type 的子类
+    TypeToken 内部有type rawType 两个类型
+    ========
+    ① getActualTypeArguments() -- 获取类型内部的参数化类型 比如Map<K,V>里面的K，V类型
+    ② getGenericSuperclass()   -- 获得带有泛型的父类
+    泛型是一种"代码模块"
+    泛型类：泛型定义在类上
+    泛型接口：泛型定义在接口上
+    泛型方法：泛型定义在方法上 <T>表示泛型方法
+    泛型类派生：子类明确泛型类型参数/子类不明确泛型类型
+    ？：类型通配符
+    把子类对象直接赋值给父类引用 叫 向上转型
+    把指向子类对象的父类引用赋值给子类 叫 向下转型
+    擦拭法：工作都是编译器做的，虚拟机对泛型一无所知
     
- 6.文件操作以及图片加载(2020.8.12)  
+
+    1.doPeek(它每次进入都会从stack数组中取出值，并通过nextNonWhitespace函数返回的值以json格式里的类型的方式return)  --    nextNonWhitespace(返回每个buffer中的值) 
+      hasNext时，如果是""，则 p=PEEKED_DOUBLE_QUOTED_NAME; 导致 nextName中 直接去获取值
+      int c = buffer[p++],p在不挺的移动，p是先赋值再自增
+      
+      在dopeek中的nextNonWhitespace函数返回值c,如果c是" -- return peeked = PEEKED_DOUBLE_QUOTED;
+      
+      
+    参考：
+        https://blog.csdn.net/u013673799/article/details/69663306 (gson的步步解析)
+    
+ 6.文件操作以及图片加载(2020.8.17)  
+    1.内部存储(data/data/包名/) 与 外部存储(storage/sdcard/Android/data/包名 || storage/0/sdcard/Android/data/包名)
+    我们所说的Extenal Storage就是 sdcard下的目录
+    2.文件的操作
+        delete -- 删除目录是必须保证是空目录
+        createNewFile -- 创建文件
+        mkdir -- 创建目录
+    3.DislruCache的理解
+        
+        
+        
+    
+    
      
 
 
