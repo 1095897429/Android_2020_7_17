@@ -135,10 +135,13 @@
      https://www.jianshu.com/p/88aa273d37be (队列queue)     
      https://mp.weixin.qq.com/s/XWzBblkYsCa512a-6jyd6A (rxJava3)
 
- 5.泛型的理解(2020.8.11)
+ 5.泛型的理解(2020.8.11 - 8.30 未解决)
     Type
     Class 是 Type 的子类
     TypeToken 内部有type rawType 两个类型
+    
+    Map<K,V> 参数化类型
+    T[] 数组类型
     ========
     ① getActualTypeArguments() -- 获取类型内部的参数化类型 比如Map<K,V>里面的K，V类型
     ② getGenericSuperclass()   -- 获得带有泛型的父类
@@ -151,14 +154,8 @@
     把子类对象直接赋值给父类引用 叫 向上转型
     把指向子类对象的父类引用赋值给子类 叫 向下转型
     擦拭法：工作都是编译器做的，虚拟机对泛型一无所知
-    
-
-    1.doPeek(它每次进入都会从stack数组中取出值，并通过nextNonWhitespace函数返回的值以json格式里的类型的方式return)  --    nextNonWhitespace(返回每个buffer中的值) 
-      hasNext时，如果是""，则 p=PEEKED_DOUBLE_QUOTED_NAME; 导致 nextName中 直接去获取值
-      int c = buffer[p++],p在不挺的移动，p是先赋值再自增
-      
-      在dopeek中的nextNonWhitespace函数返回值c,如果c是" -- return peeked = PEEKED_DOUBLE_QUOTED;
-      
+    ①.刚开始进来的时候 EMPTY_OBJECT ，然后 检索到有双引号，设置DANGLING_NAME，在设置完 key后，设置NONEMPTY_OBJECT，如此循环
+    ②.DANGLING_NAME 悬挂的键值对  
       
     参考：
         https://blog.csdn.net/u013673799/article/details/69663306 (gson的步步解析)
@@ -172,7 +169,16 @@
         mkdir -- 创建目录
     3.DislruCache的理解
         
-        
+ 7.Map是一些数据结构(2020.8.30)
+    ① HashMap
+        Java1.7 大体流程(头插法) -- 多线程死循环( 线程2导致了盖伦指向了石头，线程1在扩容时形成了(石头 - 盖伦 - 石头)互相指向，导致while一直循环)
+        Java1.8 大体流程(尾插法)
+        put get 遍历操作(遍历无序)
+    ② LinkedHashMap
+        在HashMap的原有的节点基础上新增了before after变量维护存储顺序
+        put(hashmap后的回调函数) get 遍历操作(遍历无序)
+    ③ ConcurrentHashMap
+             
         
     
     

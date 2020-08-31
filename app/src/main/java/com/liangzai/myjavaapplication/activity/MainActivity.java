@@ -23,7 +23,9 @@ import android.widget.TextView;
 
 import com.badoo.mobile.util.WeakHandler;
 import com.facebook.fbui.textlayoutbuilder.TextLayoutBuilder;
+import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
 import com.google.gson.internal.$Gson$Types;
 import com.google.gson.reflect.TypeToken;
 import com.gyf.immersionbar.ImmersionBar;
@@ -42,6 +44,7 @@ import com.uber.autodispose.AutoDispose;
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider;
 import com.vstechlab.easyfonts.EasyFonts;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -49,6 +52,9 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -89,6 +95,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        HashMap map = new HashMap();
+        map.put(null,"name");
+        map.get(null);
+
+        HashMap map1 = new LinkedHashMap();
+        map1.put("key1","value1");
+
 
 
         mImmersionBar = ImmersionBar.with(this);//初始化
@@ -131,8 +145,8 @@ public class MainActivity extends AppCompatActivity {
     private void initEvent() {
         test_timeout = findViewById(R.id.test_timeout);
         test_timeout.setOnClickListener(view -> {
-//            initTimeOut();
-            UIHelper.toVideoListActivity(this);
+            initTimeOut();
+//            UIHelper.toVideoListActivity(this);
         });
     }
 
@@ -169,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initTimeOut() {
-//        Utils.initTimeOut();
+        Utils.initTimeOut();
         //第二种方式 Handler
 //        Message message = Message.obtain();
 //        message.obj = 10;
@@ -280,16 +294,14 @@ public class MainActivity extends AppCompatActivity {
 //                .subscribe();
 
 
-        Gson gson = new Gson();
-//      String json="{\"age\":30,\"name\":\"明\",\"len\":170}";
-        String json="hello";
-        String jsTestMode = gson.fromJson(json,String.class);
+
 
 
         //MainActivity
         KLog.e("tag","main getClass " + getClass());
         //T 是 ArrayList<String>
-        TypeToken ty1 =  new TypeToken<ArrayList<String>>(){};
+//        TypeToken ty1 =  new TypeToken<ArrayList<String>>(){};
+        TypeToken ty1 =  new TypeToken<HomeBean>(){};
         //MainActivity$5
         KLog.e("tag","ty1 getClass " + ty1.getClass());
         Type superclass = ty1.getClass().getSuperclass();
@@ -357,6 +369,62 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+
+        Gson gson = new Gson();
+//      String json="{\"age\":30,\"name\":\"明\",\"len\":170}";
+        String json="hello";
+        String jsTestMode = gson.fromJson(json,String.class);
+
+        Class strClass=TestBean.class;
+        //获取类的所有声明的字段
+        Field[] sField=strClass.getDeclaredFields();
+        for (Field field : sField)
+        {
+            //获取字段的名字
+//            KLog.e("tag","Field：",field.getName());
+//            //获取字段的类型的Class类，然后获取规范化的名字
+//            KLog.e("tag","Type：",field.getType().getCanonicalName());
+//            //获取字段的类型的Type类对象，然后获取类的名字
+//            KLog.e("tag","GenericType: ",field.getGenericType().getTypeName());
+
+            List<String> fieldNames = getFieldNames(field);
+            for (String s : fieldNames) {
+                KLog.e("tag","ssss " + s);
+
+            }
+
+
+        }
+
+
+
+    }
+
+
+    private List<String> getFieldNames(Field f) {
+        SerializedName annotation = f.getAnnotation(SerializedName.class);
+        if (annotation == null) {
+            String name = FieldNamingPolicy.IDENTITY.translateName(f);
+            return Collections.singletonList(name);
+        }
+
+        String serializedName = annotation.value();
+        String[] alternates = annotation.alternate();
+        if (alternates.length == 0) {
+            return Collections.singletonList(serializedName);
+        }
+
+        List<String> fieldNames = new ArrayList<String>(alternates.length + 1);
+        fieldNames.add(serializedName);
+        for (String alternate : alternates) {
+            fieldNames.add(alternate);
+        }
+        return fieldNames;
+    }
+
+    public static class TestBean{
+        private Bean mBean;
+        public String name;
     }
 
 
@@ -365,13 +433,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
+
     public static class GenericArrayTypeTest<T> {
 
         // 这里面有各种各样的数组：各有不同 方便看测试效果
         // 含有泛型数组的才是GenericArrayType
 
         public void testGenericArrayType( List<String>[] pTypeArray,List<String> list,T test1, Set<String> set1, Class<?> clz,
-                                          String str,Bean bean) {
+                                          String str,String [] strs,Bean bean ) {
         }
 
 //        private void testGenericArrayType(List<String>[] pTypeArray, T[] vTypeArray, List<String> list,
