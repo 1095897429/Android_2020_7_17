@@ -2,6 +2,7 @@ package com.liangzai.myjavaapplication.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.collection.LruCache;
 import androidx.lifecycle.Lifecycle;
 
 import android.annotation.SuppressLint;
@@ -100,9 +101,14 @@ public class MainActivity extends AppCompatActivity {
         map.put(null,"name");
         map.get(null);
 
-        HashMap map1 = new LinkedHashMap();
+        LinkedHashMap map1 = new LinkedHashMap();
         map1.put("key1","value1");
 
+        map1.entrySet();
+        map1.remove("key1");
+
+        LruCache mlrucache = new LruCache(100){};
+        mlrucache.put("key","value");
 
 
         mImmersionBar = ImmersionBar.with(this);//初始化

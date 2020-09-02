@@ -169,14 +169,16 @@
         mkdir -- 创建目录
     3.DislruCache的理解
         
- 7.Map是一些数据结构(2020.8.30)
+ 7.Map是一些数据结构(2020.8.31)
     ① HashMap
         Java1.7 大体流程(头插法) -- 多线程死循环( 线程2导致了盖伦指向了石头，线程1在扩容时形成了(石头 - 盖伦 - 石头)互相指向，导致while一直循环)
         Java1.8 大体流程(尾插法)
         put get 遍历操作(遍历无序)
     ② LinkedHashMap
-        在HashMap的原有的节点基础上新增了before after变量维护存储顺序
-        put(hashmap后的回调函数) get 遍历操作(遍历无序)
+        在HashMap的原有的节点基础上新增了head,tail,before,after变量维护存储顺序,默认是插入顺序
+        put(hashmap后的回调函数) get  remove 遍历操作(遍历有序，利用head的指向tail遍历)
+        accessOrder --> true  是否基于访问排序 维护链表
+        应用:LruCache
     ③ ConcurrentHashMap
              
         
