@@ -178,8 +178,10 @@
         在HashMap的原有的节点基础上新增了head,tail,before,after变量维护存储顺序,默认是插入顺序
         put(hashmap后的回调函数) get  remove 遍历操作(遍历有序，利用head的指向tail遍历)
         accessOrder --> true  是否基于访问排序 维护链表
-        应用:LruCache
+        应用:LruCache(通过trimToSize来管理最近最少使用节点)
     ③ ConcurrentHashMap
+        Java1.7 Segment数组 + HashEntry数组
+        和HashMap明显的区别是key/value是不能为空
              
         
     

@@ -58,6 +58,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -109,7 +110,11 @@ public class MainActivity extends AppCompatActivity {
 
         LruCache mlrucache = new LruCache(100){};
         mlrucache.put("key","value");
+        mlrucache.get("key");
 
+
+        ConcurrentHashMap concurrentHashMap = new ConcurrentHashMap();
+        concurrentHashMap.put("key","value");
 
         mImmersionBar = ImmersionBar.with(this);//初始化
         mImmersionBar
